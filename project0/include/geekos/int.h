@@ -82,6 +82,8 @@ static __inline__ bool Is_User_Interrupt(struct Interrupt_State *state)
  * The interrupt flag bit in the eflags register.
  * FIXME: should be in something like "cpu.h".
  */
+
+/*Note:IF is the 9th bit,so here 1<<9	-- Late Lee*/
 #define EFLAGS_IF (1 << 9)
 
 /*

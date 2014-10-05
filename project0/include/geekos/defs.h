@@ -5,6 +5,7 @@
  * 
  * This is free software.  You are permitted to use,
  * redistribute, and modify it as specified in the file "COPYING".
+ ******!Note:modified by Late Lee
  */
 
 #ifndef GEEKOS_DEFS_H
@@ -57,7 +58,7 @@
  * x86 has 4096 byte pages
  */
 #define PAGE_POWER 12
-#define PAGE_SIZE (1<<PAGE_POWER)
+#define PAGE_SIZE (1<<PAGE_POWER)	/*4096 bytes*/
 #define PAGE_MASK (~(0xffffffff << PAGE_POWER))
 
 #endif  /* GEEKOS_DEFS_H */

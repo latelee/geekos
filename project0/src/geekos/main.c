@@ -21,8 +21,42 @@
 #include <geekos/timer.h>
 #include <geekos/keyboard.h>
 
-
-
+void EchoCount()
+{
+    Keycode keycode;
+    int count;
+    count = 0;
+    while (1)
+    {
+        if (Read_Key(&keycode))
+        {
+            if ((keycode & 0x4000) == 0x4000)
+            {
+                if ((Wait_For_Key() & 0x00ff) == 'q')
+                {
+                    Set_Current_Attr(ATTRIB(BLACK, RED));
+                    Print("Ctrl+q is entered! \nGAME over!!\n\n");
+                    Exit(1);
+                }
+            }
+            else if ( !(keycode & KEY_SPECIAL_FLAG) && !(keycode & KEY_RELEASE_FLAG))
+            {
+                keycode &= 0xff;
+                count = count + 1;
+                Set_Current_Attr(ATTRIB(BLACK,CYAN));
+                Print("%c",(keycode == '\r') ? '\n':keycode);
+                if (keycode == '\r')
+                {
+                    count = count -1;
+                    Set_Current_Attr(ATTRIB(GRAY,BLUE));
+                    Print("The NUM you enter is : %d",count);
+                    Print("\n");
+                    count = 0;
+                }
+            }
+        }            
+    }
+}
 
 /*
  * Kernel C code entry point.
@@ -42,25 +76,18 @@ void Main(struct Boot_Info* bootInfo)
     Init_Timer();
     Init_Keyboard();
 
+    Set_Current_Attr(ATTRIB(BLACK,BLUE|BRIGHT));
+    Print("=====>>Welcome to GeekOS<<=====\n");
+    Print("=====>>Hello from Late Lee %s %s <<===\n", __DATE__, __TIME__);
+    Print("This is the test of project0:Getting Started\n\n");
+    Print("\tFightNow! Team\n\nctrl+q:quit\n");
+    Set_Current_Attr(ATTRIB(BLACK,GRAY));
+  /*  TODO("Start a kernel thread to echo pressed keys and print counts");*/
 
-    Set_Current_Attr(ATTRIB(BLACK, GREEN|BRIGHT));
-    Print("Welcome to GeekOS!\n");
-    Set_Current_Attr(ATTRIB(BLACK, GRAY));
-
-
-    TODO("Start a kernel thread to echo pressed keys and print counts");
-
-
-
+    //new here
+    struct Kernel_Thread *kerThd;
+    kerThd = Start_Kernel_Thread(&EchoCount,0,PRIORITY_NORMAL,false);
     /* Now this thread is done. */
     Exit(0);
 }
-
-
-
-
-
-
-
-
 
